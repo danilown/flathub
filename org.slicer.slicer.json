@@ -1,0 +1,67 @@
+{
+    "id": "org.slicer.Slicer",
+    "runtime": "org.kde.Platform",
+    "runtime-version": "5.15-22.08",
+    "sdk": "org.kde.Sdk",
+    "base": "io.qt.qtwebengine.BaseApp",
+    "base-version": "5.15-22.08",
+    "command": "Slicer",
+    "finish-args": [
+        "--share=ipc",
+        "--socket=fallback-x11",
+        "--socket=wayland",
+        "--device=dri",
+         "--share=network",
+        "--filesystem=home",
+        "--env=PATH=/app/bin:/app/lib",
+        "--env=LD_LIBRARY_PATH=/app/lib:/app/lib32",
+        "--env=LD_RUN_PATH=/app/lib"
+    ],
+    "cleanup-commands":[
+        "/app/cleanup-BaseApp.sh"
+    ],
+    "add-extensions" : {
+	    "org.freedesktop.Platform.GL.default" : {
+	        "directory": "app/lib/",
+	        "version": "22.08",
+            "add-ld-path": "app/lib"
+	    }
+	},
+    "modules": [
+     	"shared-modules/glu/glu-9.json",
+        {
+            "name": "Slicer",
+            "buildsystem": "simple",
+            "build-commands": [
+                "install apply_extra /app/bin",
+                "install Slicer-bin /app/bin/Slicer"
+            ],  
+            "sources": [
+                {
+                    "type": "script",
+                    "dest-filename": "apply_extra",
+                    "commands": [
+                        "mkdir -p bin",
+                        "tar --strip-components=1 -xf Slicer-5.2.1-linux-amd64.tar.gz -C bin/",
+                        "rm -f Slicer-5.2.1-linux-amd64.tar.gz"
+                    ]
+                },
+                {
+                    "type": "file",
+                    "path": "Slicer-bin"
+                },
+                {
+                    "type": "extra-data",
+                    "filename": "Slicer-5.2.1-linux-amd64.tar.gz",
+                    "only-arches": [
+                        "x86_64"
+                    ],
+                    "url": "https://download.slicer.org/bitstream/637f7a7f517443dc5dc7326e",
+                    "sha256": "35b0d0a6b74aa41c56c01d02c187eefe58e3b6558d8e5ddfc17a2b2447927e2f",
+                    "size": 372998578
+                }
+            ]
+        }
+
+    ]
+}
