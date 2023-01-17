@@ -13,27 +13,37 @@
         "--device=dri",
          "--share=network",
         "--filesystem=home",
-        "--env=PATH=/app/bin:/app/lib",
-        "--env=LD_LIBRARY_PATH=/app/lib:/app/lib32",
-        "--env=LD_RUN_PATH=/app/lib"
+        "--filesystem=~/Slicer/NA-MIC/Extensions-31317:create",
+        "--env=Slicer_EXTENSIONS_DIRBASENAME=~/Slicer/NA-MIC/Extensions-31317:create",
+        "--env=SLICER_HOME=~/Slicer",
+        "--env=XDG_CURRENT_DESKTOP=Kde",
+        "--env=PYTHONHOME=/app/extra/bin/lib/Python",
+        "--env=PYTHONPATH=/app/extra/bin/lib/Slicer-5.2:/app/extra/bin/lib/Slicer-5.2/qt-scripted-modules:/app/extra/bin/lib/Slicer-5.2/qt-loadable-modules:/app/extra/bin/lib/vtkTeem:/app/extra/bin/bin/Python:/app/extra/bin/lib/Slicer-5.2/qt-loadable-modules/Python:/app/extra/bin/lib/Python/lib/python3.9:/app/extra/bin/lib/Python/lib/python3.9/lib-dynload:/app/extra/bin/lib/Python/lib/python3.9/site-packages:/app/extra/bin/lib/python3.9/site-packages${PYTHONPATH:+:$PYTHONPATH}",
+        "--env=PATH=/app/bin:/app/lib:/app/lib/gl/lib:app/lib/intel-vaapi-driver:/bin"
     ],
     "cleanup-commands":[
         "/app/cleanup-BaseApp.sh"
     ],
     "add-extensions" : {
-	    "org.freedesktop.Platform.GL.default" : {
-	        "directory": "app/lib/",
-	        "version": "22.08",
-            "add-ld-path": "app/lib"
-	    }
-	},
+        "org.freedesktop.Platform.GL.default" : {
+            "directory": "lib/gl",
+            "version": "22.08"
+        },
+        "org.freedesktop.Platform.VAAPI.Intel" : {
+            "directory": "lib/intel-vaapi-driver",
+            "version": "22.08"
+        }
+    },
     "modules": [
-     	"shared-modules/glu/glu-9.json",
+         "shared-modules/glu/glu-9.json",
         {
             "name": "Slicer",
             "buildsystem": "simple",
             "build-commands": [
                 "install apply_extra /app/bin",
+                "mkdir -p /app/lib/gl",
+
+                "mkdir -p /app/lib/intel-vaapi-driver",
                 "install Slicer-bin /app/bin/Slicer"
             ],  
             "sources": [
@@ -41,7 +51,7 @@
                     "type": "script",
                     "dest-filename": "apply_extra",
                     "commands": [
-                        "mkdir -p bin",
+                        "mkdir -p bin/NA-MIC/Extensions-31317",
                         "tar --strip-components=1 -xf Slicer-5.2.1-linux-amd64.tar.gz -C bin/",
                         "rm -f Slicer-5.2.1-linux-amd64.tar.gz"
                     ]
